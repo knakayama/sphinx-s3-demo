@@ -1,0 +1,31 @@
+---
+- name: Install packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nginx
+    - httpd-tools
+
+- name: Be sure nginx enabled and started
+  service:
+    name: nginx
+    enabled: yes
+    state: started
+
+- name: Copy config
+  template:
+    src: etc/nginx/nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: 06444
+  notify:
+    - Restart nginx
+
+- name: Generate htpasswd
+  shell: |
+    htpasswd -b -c .htpasswd sphinx sphinx
+  args:
+    chdir: /etc/nginx
+    creates: /etc/nginx/.htpasswd

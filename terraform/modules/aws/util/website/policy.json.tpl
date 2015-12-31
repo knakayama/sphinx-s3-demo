@@ -6,7 +6,14 @@
       "Effect": "Allow",
       "Principal": "*",
       "Action": ["s3:GetObject"],
-      "Resource": "arn:aws:s3:::${backet_name}/*"
+      "Resource": "arn:aws:s3:::${backet}/*",
+      "Condition": {
+        "IpAddress": {
+          "aws:SourceIp": [
+            "${web_public_ip}"
+          ]
+        }
+      }
     }
   ]
 }
