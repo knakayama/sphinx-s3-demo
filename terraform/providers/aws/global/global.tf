@@ -1,8 +1,6 @@
-variable "name"       { }
-variable "region"     { }
-variable "iam_admin"  { }
-variable "domain"     { }
-variable "sub_domain" { }
+variable "name"      { }
+variable "region"    { }
+variable "iam_admin" { }
 
 provider "aws" {
   region = "${var.region}"
@@ -11,10 +9,8 @@ provider "aws" {
 module "iam" {
   source = "../../../modules/aws/util/iam"
 
-  name       = "${var.name}-admin"
-  user       = "${var.iam_admin}"
-  domain     = "${var.domain}"
-  sub_domain = "${var.sub_domain}"
+  name = "my-${var.name}"
+  user = "${var.iam_admin}"
 }
 
 output "user"       { value = "${module.iam.user}" }

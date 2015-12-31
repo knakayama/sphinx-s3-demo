@@ -1,7 +1,5 @@
-variable "name"       { default = "iam" }
-variable "user"       { }
-variable "domain"     { }
-variable "sub_domain" { }
+variable "name" { default = "iam" }
+variable "user" { }
 
 variable "rel_path" {
   default = "../../../modules/aws/util/iam/"
@@ -11,8 +9,7 @@ resource "template_file" "mod" {
   template = "${file(concat(var.rel_path, "policy.json.tpl"))}"
 
   vars {
-    user   = "${var.user}"
-    backet = "${var.sub_domain}.${var.domain}"
+    backet = "${var.name}"
   }
 }
 
