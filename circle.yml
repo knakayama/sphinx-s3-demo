@@ -1,0 +1,14 @@
+dependencies:
+  override:
+    - pip install -r requirements.txt
+
+test:
+  post:
+    - sphinx-build -b html -a docs docs/_build/html
+    - aws s3 sync docs/_build/html s3://${BUCKET} --region ap-northeast-1 --dryrun
+
+deployment:
+  master:
+    branch: master
+    commands:
+      - aws s3 sync docs/_build/html s3://${BUCKET} --region ap-northeast-1

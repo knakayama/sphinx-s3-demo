@@ -1,0 +1,2 @@
+export TF_VAR_domain=""
+export TF_VAR_sub_domain=""
