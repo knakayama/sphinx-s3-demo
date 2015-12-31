@@ -1,14 +1,47 @@
+machine:
+  environment:
+    AWS_DEFAULT_REGION: ap-northeast-1
+    TERRAFORM_VER: 0.6.8
+    BIN_PATH: ~/.terraform
+    PATH: $BIN_PATH:$PATH
+
 dependencies:
-  override:
+  cache_directories:
+    - ~/.terraform
+
+  pre:
+    - |
+      if [[ -z "$(ls -A ~/.terraform)" ]]; then
+        mkdir -p ~/.terraform
+        cd ~/.terraform
+        wget "https://releases.hashicorp.com/terraform/${TERRAFORM_VER}/terraform_${TERRAFORM_VER}_linux_amd64.zip"
+        unzip *.zip
+        rm *.zip
+      fi
+
+  post:
     - pip install -r requirements.txt
 
+  override:
+    - echo "TODO build"
+
 test:
-  post:
-    - sphinx-build -b html -a docs docs/_build/html
-    - aws s3 sync docs/_build/html s3://${BACKET} --region ap-northeast-1 --dryrun
+  override:
+    - |
+      sphinx-build -b html -a docs docs/_build/html
+      aws s3 sync docs/_build/html s3://${BUCKET} --region ap-northeast-1 --dryrun
+      cd terraform/providers/aws/ap_northeast_1
+      terraform remote config -backend=S3 -backend-config="bucket=knakayama-tfstates" -backend-config="key=sphinx-s3-demo.tf" -backend-config="region=ap-northeast-1"
+      terraform remote pull
+      terraform get
+      terraform plan -out=terraform.plan
 
 deployment:
-  master:
+  production:
     branch: master
     commands:
-      - aws s3 sync docs/_build/html s3://${BACKET} --region ap-northeast-1
+      - |
+        aws s3 sync docs/_build/html s3://${BUCKET} --region ap-northeast-1
+        cd terraform/providers/aws/ap_northeast_1
+        terraform apply terraform.plan
+        terraform remote push

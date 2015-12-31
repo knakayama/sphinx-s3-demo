@@ -9,8 +9,8 @@ variable "az"            { }
 variable "vpc_cidr"      { }
 variable "public_subnet" { }
 
-variable "acl"         { }
 variable "policy_file" { }
+variable "bucket"      { }
 
 variable "domain"      { }
 variable "sub_domain"  { }
@@ -49,12 +49,11 @@ module "compute" {
 module "website" {
   source = "../../../modules/aws/util/website"
 
-  name = "my-${var.name}"
-  acl  = "${var.acl}"
+  bucket        = "${var.bucket}"
   policy_file   = "${var.policy_file}"
   web_public_ip = "${module.compute.web_public_ip}"
 }
 
 output "web_public_ip"       { value = "${module.compute.web_public_ip}" }
 output "route53_record_fqdn" { value = "${module.compute.route53_record_fqdn}" }
-output "s3_website_endpoint" { value = "${module.website.s3_website_endpoint}" }
+output "website_endpoint"    { value = "${module.website.website_endpoint}" }

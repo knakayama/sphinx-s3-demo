@@ -1,6 +1,7 @@
-variable "name"      { }
-variable "region"    { }
-variable "iam_admin" { }
+variable "bucket_doc"     { }
+variable "bucket_tfstate" { }
+variable "region"         { }
+variable "iam_admin"      { }
 
 provider "aws" {
   region = "${var.region}"
@@ -9,8 +10,9 @@ provider "aws" {
 module "iam" {
   source = "../../../modules/aws/util/iam"
 
-  name = "my-${var.name}"
-  user = "${var.iam_admin}"
+  user          = "${var.iam_admin}"
+  bucket_doc    = "${var.bucket_doc}"
+  bucket_tfstate = "${var.bucket_tfstate}"
 }
 
 output "user"       { value = "${module.iam.user}" }

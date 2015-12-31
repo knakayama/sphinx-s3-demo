@@ -1,5 +1,6 @@
-variable "name" { default = "iam" }
-variable "user" { }
+variable "user"           { }
+variable "bucket_doc"     { }
+variable "bucket_tfstate" { }
 
 variable "rel_path" {
   default = "../../../modules/aws/util/iam/"
@@ -9,7 +10,8 @@ resource "template_file" "mod" {
   template = "${file(concat(var.rel_path, "policy.json.tpl"))}"
 
   vars {
-    backet = "${var.name}"
+    bucket_doc     = "${var.bucket_doc}"
+    bucket_tfstate = "${var.bucket_tfstate}"
   }
 }
 

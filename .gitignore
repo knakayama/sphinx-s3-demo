@@ -1,5 +1,6 @@
 .envrc
 *tfstate*
+*.plan
 .terraform
 .doctrees
 .buildinfo

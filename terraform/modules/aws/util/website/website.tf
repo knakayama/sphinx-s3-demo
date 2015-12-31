@@ -1,7 +1,6 @@
-variable "name"          { default = "website" }
-variable "acl"           { }
 variable "policy_file"   { }
 variable "web_public_ip" { }
+variable "bucket"    { }
 
 variable "rel_path" {
   default = "../../../modules/aws/util/website/"
@@ -11,14 +10,14 @@ resource "template_file" "website" {
   template = "${file(concat(var.rel_path, "policy.json.tpl"))}"
 
   vars {
-    backet = "${var.name}"
+    bucket = "${var.bucket}"
     web_public_ip = "${var.web_public_ip}"
   }
 }
 
 resource "aws_s3_bucket" "website" {
-  bucket = "${var.name}"
-  acl    = "${var.acl}"
+  bucket = "${var.bucket}"
+  acl    = "public-read"
   policy = "${template_file.website.rendered}"
   force_destroy = true
 
@@ -27,4 +26,4 @@ resource "aws_s3_bucket" "website" {
   }
 }
 
-output "s3_website_endpoint" { value = "${aws_s3_bucket.website.website_endpoint}" }
+output "website_endpoint" { value = "${aws_s3_bucket.website.website_endpoint}" }

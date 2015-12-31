@@ -12,5 +12,5 @@ web_instance_type   = "t2.micro"
 web_instance_ami_id = "ami-8d1021e3"
 
 # S3
-acl = "public-read"
 policy_file = "policy.json.tpl"
+bucket      = "my-sphinx-s3"

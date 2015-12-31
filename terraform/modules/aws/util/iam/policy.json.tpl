@@ -10,7 +10,10 @@
         "s3:PutObject"
       ],
       "Effect": "Allow",
-      "Resource": "arn:aws:s3:::${backet}/*"
+      "Resource": [
+        "arn:aws:s3:::${bucket_doc}/*",
+        "arn:aws:s3:::${bucket_tfstate}/*"
+      ]
     }
   ]
 }
