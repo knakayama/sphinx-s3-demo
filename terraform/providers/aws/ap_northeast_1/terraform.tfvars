@@ -14,3 +14,7 @@ web_instance_ami_id = "ami-8d1021e3"
 # S3
 policy_file = "policy.json.tpl"
 bucket      = "my-sphinx-s3"
+
+# Route53
+domain     = "YOUR_DOMAIN_HERE"
+sub_domain = "YOUR_SUB_DOMAIN_HERE"

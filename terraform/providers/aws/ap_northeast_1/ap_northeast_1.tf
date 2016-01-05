@@ -40,8 +40,6 @@ module "compute" {
   vpc_id              = "${module.network.vpc_id}"
   public_subnet_id    = "${module.network.public_subnet_id}"
   key_name            = "${aws_key_pair.site_key.key_name}"
-  domain              = "${var.domain}"
-  sub_domain          = "${var.sub_domain}"
   web_instance_type   = "${var.web_instance_type}"
   web_instance_ami_id = "${var.web_instance_ami_id}"
 }
@@ -54,6 +52,14 @@ module "website" {
   web_public_ip = "${module.compute.web_public_ip}"
 }
 
-output "web_public_ip"       { value = "${module.compute.web_public_ip}" }
-output "route53_record_fqdn" { value = "${module.compute.route53_record_fqdn}" }
-output "website_endpoint"    { value = "${module.website.website_endpoint}" }
+module "dns" {
+  source = "../../../modules/aws/util/dns"
+
+  domain        = "${var.domain}"
+  sub_domain    = "${var.sub_domain}"
+  web_public_ip = "${module.compute.web_public_ip}"
+}
+
+output "web_public_ip"    { value = "${module.compute.web_public_ip}" }
+output "route53_fqdn"     { value = "${module.dns.route53_fqdn}" }
+output "website_endpoint" { value = "${module.website.website_endpoint}" }

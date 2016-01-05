@@ -4,8 +4,6 @@ variable "key_name"         { }
 variable "public_subnet_id" { }
 variable "instance_type"    { }
 variable "instance_ami_id"  { }
-variable "domain"           { }
-variable "sub_domain"       { }
 
 resource "aws_security_group" "web" {
   name        = "${var.name}"
@@ -57,17 +55,4 @@ resource "aws_eip" "web" {
   instance = "${aws_instance.web.id}"
 }
 
-resource "aws_route53_zone" "web" {
-  name = "${var.domain}"
-}
-
-resource "aws_route53_record" "web" {
-  name    = "${var.sub_domain}.${var.domain}"
-  zone_id = "${aws_route53_zone.web.zone_id}"
-  type    = "A"
-  ttl     = 60
-  records = ["${aws_eip.web.public_ip}"]
-}
-
-output "public_ip"           { value = "${aws_eip.web.public_ip}" }
-output "route53_record_fqdn" { value = "${aws_route53_record.web.fqdn}" }
+output "public_ip" { value = "${aws_eip.web.public_ip}" }
