@@ -2,12 +2,8 @@ variable "policy_file"   { }
 variable "web_public_ip" { }
 variable "bucket"    { }
 
-variable "rel_path" {
-  default = "../../../modules/aws/util/website/"
-}
-
 resource "template_file" "website" {
-  template = "${file(concat(var.rel_path, "policy.json.tpl"))}"
+  template = "${file(concat(path.module, "/policy.json.tpl"))}"
 
   vars {
     bucket = "${var.bucket}"

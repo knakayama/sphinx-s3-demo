@@ -2,12 +2,8 @@ variable "user"           { }
 variable "bucket_doc"     { }
 variable "bucket_tfstate" { }
 
-variable "rel_path" {
-  default = "../../../modules/aws/util/iam/"
-}
-
 resource "template_file" "mod" {
-  template = "${file(concat(var.rel_path, "policy.json.tpl"))}"
+  template = "${file(concat(path.module, "/policy.json.tpl"))}"
 
   vars {
     bucket_doc     = "${var.bucket_doc}"
